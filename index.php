@@ -16,7 +16,6 @@
             cursor: pointer; /* カーソルをポインターにする */
             border-radius: 3px; /* 角を丸くする */
             font-weight: bold; /* 太字にする */
-
         }
 
         .custom-btn:hover {
@@ -29,17 +28,41 @@
             border: 2px solid #00FF00; /* 緑の枠線 */
             padding: 10px; /* パディング */
         }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 
 <body>
     <div class="bg-gray-200 flex justify-center items-center h-screen">
         <div class="calculator bg-white rounded p-8 shadow-md">
+            <div class="error-message">
+                <?php
+                // フォームが送信されたかどうかをチェック
+                if(isset($_POST['submit'])) {
+                    // ユーザーが入力した値を取得
+                    $price = $_POST['price'];
+                    
+                    // 入力値の検証
+                    if(empty($price)) {
+                        // 値が入力されていない場合、エラーメッセージを表示
+                        echo "値を入力してください";
+                    } else {
+                        // 入力が正常な場合はデータベースに挿入する処理を実行
+                        require_once "update.php";
+                    }
+                }
+                ?>
+            </div>
             <div class="d-flex w-full mt-3 mb-3">
-                <form action="update.php" method="post">
+                <form action="" method="post">
                     <input type="text" id="display" name="price" class="w-full mb-4 px-2 py-1 custom-display" readonly>
                     <div>
-                    <button class="custom-btn" onclick="update()">計上</button>
+                        <button class="custom-btn" name="submit">計上</button>
                         <a class="custom-btn" href="sales/">売上</a>
                     </div>
                 </form>
@@ -96,6 +119,9 @@
         function calculateTotal() {
             memory = eval(memory);
             updateDisplay();
+        }
+        function updateDisplay() {
+            document.getElementById('display').value = memory;
         }
     </script>
 </body>

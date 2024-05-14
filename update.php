@@ -11,6 +11,4 @@ $price = $posts['price'];
 $sql = "INSERT INTO sales (price) VALUES ({$price});";
 // SQLを実行
 $pdo->query($sql);
-
-// レジ画面に戻る（リダイレクト：ページ転送）
-header('Location: index.php');
+?>

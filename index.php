@@ -7,6 +7,28 @@
     <title>YSEレジ</title>
     <!-- Tailwind CSSのCDNリンク -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .custom-btn {
+            background-color: #DDDDDD; /* グレーの背景色 */
+            color: black; /* テキストの色 */
+            border: 1px solid black; /* 黒い枠線 */
+            padding: 10px 20px; /* パディング */
+            cursor: pointer; /* カーソルをポインターにする */
+            border-radius: 3px; /* 角を丸くする */
+
+        }
+
+        .custom-btn:hover {
+            background-color: #718096; /* ホバー時の色 */
+        }
+
+        .custom-display {
+            background-color: black; /* 黒い背景色 */
+            color: white; /* テキストの色 */
+            border: 2px solid #00FF00; /* 緑の枠線 */
+            padding: 10px; /* パディング */
+        }
+    </style>
 </head>
 
 <body>
@@ -14,30 +36,30 @@
         <div class="calculator bg-white rounded p-8 shadow-md">
             <div class="d-flex w-full mt-3 mb-3">
                 <form action="update.php" method="post">
-                    <input type="text" id="display" name="price" class="w-full mb-4 px-2 py-1 border rounded" readonly>
+                    <input type="text" id="display" name="price" class="w-full mb-4 px-2 py-1 custom-display" readonly>
                     <div>
-                        <button class="btn border p-3" onclick="update()">計上</button>
-                        <a class="btn border p-3" href="sales/">売上</a>
+                    <button class="custom-btn" onclick="update()">計上</button>
+                        <a class="custom-btn" href="sales/">売上</a>
                     </div>
                 </form>
             </div>
             <div class="grid grid-cols-4 gap-4">
-                <button class="btn" onclick="addToDisplay('7')">7</button>
-                <button class="btn" onclick="addToDisplay('8')">8</button>
-                <button class="btn" onclick="addToDisplay('9')">9</button>
-                <button class="btn" onclick="clearAll()">AC</button>
-                <button class="btn" onclick="addToDisplay('4')">4</button>
-                <button class="btn" onclick="addToDisplay('5')">5</button>
-                <button class="btn" onclick="addToDisplay('6')">6</button>
-                <button class="btn" onclick="calculate('+')">+</button>
-                <button class="btn" onclick="addToDisplay('1')">1</button>
-                <button class="btn" onclick="addToDisplay('2')">2</button>
-                <button class="btn" onclick="addToDisplay('3')">3</button>
-                <button class="btn" onclick="calculate('*')">x</button>
-                <button class="btn" onclick="addToDisplay('0')">0</button>
-                <button class="btn" onclick="addToDisplay('00')">00</button>
-                <button class="btn" onclick="calculateTax()">Tax</button>
-                <button class="btn" onclick="calculateTotal()">=</button>
+                <button class="custom-btn" onclick="addToDisplay('7')">7</button>
+                <button class="custom-btn" onclick="addToDisplay('8')">8</button>
+                <button class="custom-btn" onclick="addToDisplay('9')">9</button>
+                <button class="custom-btn" onclick="clearAll()">AC</button>
+                <button class="custom-btn" onclick="addToDisplay('4')">4</button>
+                <button class="custom-btn" onclick="addToDisplay('5')">5</button>
+                <button class="custom-btn" onclick="addToDisplay('6')">6</button>
+                <button class="custom-btn" onclick="calculate('+')">+</button>
+                <button class="custom-btn" onclick="addToDisplay('1')">1</button>
+                <button class="custom-btn" onclick="addToDisplay('2')">2</button>
+                <button class="custom-btn" onclick="addToDisplay('3')">3</button>
+                <button class="custom-btn" onclick="calculate('*')">x</button>
+                <button class="custom-btn" onclick="addToDisplay('0')">0</button>
+                <button class="custom-btn" onclick="addToDisplay('00')">00</button>
+                <button class="custom-btn" onclick="calculateTax()">税込み</button>
+                <button class="custom-btn" onclick="calculateTotal()">=</button>
             </div>
         </div>
     </div>
@@ -75,8 +97,6 @@
             updateDisplay();
         }
     </script>
-
-    </div>
 </body>
 
 </html>

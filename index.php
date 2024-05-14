@@ -15,6 +15,7 @@
             padding: 10px 20px; /* パディング */
             cursor: pointer; /* カーソルをポインターにする */
             border-radius: 3px; /* 角を丸くする */
+            font-weight: bold; /* 太字にする */
 
         }
 

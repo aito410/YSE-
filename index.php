@@ -103,24 +103,26 @@
         }
 
         function calculate(operator) {
-            if (displayMemory === "") {
-                showError("※値を入力してください");
-                return;
-            }
-            // 直前が演算子または displayMemory が空の場合、処理を中止
-            if (displayMemory.slice(-1).match(/[+\-*×]/)) {
-                return;
-            }
-            clearErrorMessage();
-            if (operator === '*') {
-                memory += '*';
-                displayMemory += '×';
-            } else {
-                memory += operator;
-                displayMemory += operator;
-            }
-            updateDisplay();
-        }
+    if (displayMemory === "") {
+        showError("※値を入力してください");
+        return;
+    }
+    // 直前が演算子または displayMemory が空の場合、処理を中止
+    if (displayMemory.slice(-1).match(/[+\-*×]/) || memory === "") {
+        showError("※計算が完了していません");
+        return;
+    }
+    clearErrorMessage();
+    if (operator === '*') {
+        memory += '*';
+        displayMemory += '×';
+    } else {
+        memory += operator;
+        displayMemory += operator;
+    }
+    updateDisplay();
+}
+
 
         function clearAll() {
             memory = "";
@@ -156,7 +158,6 @@
             displayMemory = memory.toString();
             updateDisplay();
         }
-
         function calculateTotal() {
             if (displayMemory === "") {
                 showError("※値を入力してください");
@@ -166,11 +167,14 @@
                 return; // 直前に演算子がある場合、処理を中止
             }
             clearErrorMessage();
+            // 乗算演算子 × を * に置換
+            var expression = displayMemory.replace(/×/g, '*');
             try {
-                memory = eval(memory.replace(/×/g, '*')).toString(); // × を * に置き換え
+                // 計算を実行
+                memory = eval(expression).toString();
                 displayMemory = memory;
                 updateDisplay();
-            } catch {
+            } catch (error) {
                 memory = "Error";
                 displayMemory = "Error";
                 updateDisplay();

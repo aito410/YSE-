@@ -27,6 +27,7 @@
             color: white; /* テキストの色 */
             border: 2px solid #00FF00; /* 緑の枠線 */
             padding: 10px; /* パディング */
+            text-align: right; /* 右詰め */
         }
 
         .error-message {
@@ -38,17 +39,18 @@
 </head>
 
 <body>
-    <div class="bg-gray-200 flex justify-center items-center h-screen">
+    <div class="bg-gray-200 flex justify-center items-center h-screen flex-col">
+        <h1 class="text-3xl font-bold mb-6">YSEレジシステム</h1>
         <div class="calculator bg-white rounded p-8 shadow-md">
             <div class="error-message">
                 <?php
                 // フォームが送信されたかどうかをチェック
-                if(isset($_POST['submit'])) {
+                if (isset($_POST['submit'])) {
                     // ユーザーが入力した値を取得
                     $price = $_POST['price'];
                     
                     // 入力値の検証
-                    if(empty($price)) {
+                    if (empty($price)) {
                         // 値が入力されていない場合、エラーメッセージを表示
                         echo "値を入力してください";
                     } else {
@@ -90,39 +92,68 @@
 
     <script>
         var memory = "";
+        var displayMemory = "";
         const TAX_RATE = 0.1;
 
         function addToDisplay(value) {
             memory += value;
+            displayMemory += value;
             updateDisplay();
         }
 
-        function calculate(value) {
-            memory += value;
+        function calculate(operator) {
+            if (displayMemory === "" || displayMemory.slice(-1).match(/[+\-*]/)) {
+                return;
+            }
+            if (operator === '*') {
+                memory += '*';
+                displayMemory += '×';
+            } else {
+                memory += operator;
+                displayMemory += operator;
+            }
+            updateDisplay();
         }
 
         function clearAll() {
             memory = "";
+            displayMemory = "";
             updateDisplay();
         }
 
         function updateDisplay() {
-            document.getElementById('display').value = memory;
+            document.getElementById('display').value = displayMemory;
         }
 
         function calculateTax() {
-            memory *= (1 + TAX_RATE);
+            if (displayMemory === "") return;
+            memory = parseFloat(memory) * (1 + TAX_RATE);
             memory = Math.round(memory);
+            displayMemory = memory.toString();
             updateDisplay();
         }
 
         function calculateTotal() {
-            memory = eval(memory);
-            updateDisplay();
+            if (displayMemory === "") return;
+            try {
+                memory = eval(memory).toString();
+                displayMemory = memory;
+                updateDisplay();
+            } catch {
+                memory = "Error";
+                displayMemory = "Error";
+                updateDisplay();
+            }
         }
-        function updateDisplay() {
-            document.getElementById('display').value = memory;
-        }
+
+        // 税込みボタンと=ボタンのクリックイベントを無視する
+        document.querySelector('button[data-type="tax"]').addEventListener('click', function(event) {
+            if (displayMemory === "") event.preventDefault();
+        });
+
+        document.querySelector('button[data-type="equal"]').addEventListener('click', function(event) {
+            if (displayMemory === "") event.preventDefault();
+        });
     </script>
 </body>
 

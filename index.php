@@ -32,7 +32,7 @@
 
         .error-message {
             color: red;
-            font-size: 14px;
+            font-size: 12px; /* フォントサイズを14pxから12pxに変更 */
             margin-top: 5px;
         }
     </style>
@@ -42,7 +42,7 @@
     <div class="bg-gray-200 flex justify-center items-center h-screen flex-col">
         <h1 class="text-3xl font-bold mb-6">YSEレジシステム</h1>
         <div class="calculator bg-white rounded p-8 shadow-md">
-            <div class="error-message">
+            <div class="error-message" id="error-message">
                 <?php
                 // フォームが送信されたかどうかをチェック
                 if (isset($_POST['submit'])) {
@@ -52,7 +52,7 @@
                     // 入力値の検証
                     if (empty($price)) {
                         // 値が入力されていない場合、エラーメッセージを表示
-                        echo "値を入力してください";
+                        echo "※値を入力してください";
                     } else {
                         // 入力が正常な場合はデータベースに挿入する処理を実行
                         require_once "update.php";
@@ -61,10 +61,10 @@
                 ?>
             </div>
             <div class="d-flex w-full mt-3 mb-3">
-                <form action="" method="post">
+                <form action="" method="post" onsubmit="return validateForm()">
                     <input type="text" id="display" name="price" class="w-full mb-4 px-2 py-1 custom-display" readonly>
                     <div>
-                        <button class="custom-btn" name="submit">計上</button>
+                        <button type="submit" class="custom-btn" name="submit">計上</button>
                         <a class="custom-btn" href="sales/">売上</a>
                     </div>
                 </form>
@@ -96,15 +96,22 @@
         const TAX_RATE = 0.1;
 
         function addToDisplay(value) {
+            clearErrorMessage();
             memory += value;
             displayMemory += value;
             updateDisplay();
         }
 
         function calculate(operator) {
-            if (displayMemory === "" || displayMemory.slice(-1).match(/[+\-*]/)) {
+            if (displayMemory === "") {
+                showError("※値を入力してください");
                 return;
             }
+            // 直前が演算子または displayMemory が空の場合、処理を中止
+            if (displayMemory.slice(-1).match(/[+\-*×]/)) {
+                return;
+            }
+            clearErrorMessage();
             if (operator === '*') {
                 memory += '*';
                 displayMemory += '×';
@@ -119,14 +126,31 @@
             memory = "";
             displayMemory = "";
             updateDisplay();
+            clearErrorMessage();
         }
 
         function updateDisplay() {
             document.getElementById('display').value = displayMemory;
         }
 
+        function clearErrorMessage() {
+            document.getElementById('error-message').innerText = "";
+        }
+
+        function showError(message) {
+            document.getElementById('error-message').innerText = message;
+        }
+
         function calculateTax() {
-            if (displayMemory === "") return;
+            if (displayMemory === "") {
+                showError("※値を入力してください");
+                return;
+            }
+            if (displayMemory.match(/[+\-*×]/)) {
+                showError("※計算が完了していません");
+                return; // 途中に演算子が含まれている場合、処理を中止
+            }
+            clearErrorMessage();
             memory = parseFloat(memory) * (1 + TAX_RATE);
             memory = Math.round(memory);
             displayMemory = memory.toString();
@@ -134,9 +158,16 @@
         }
 
         function calculateTotal() {
-            if (displayMemory === "") return;
+            if (displayMemory === "") {
+                showError("※値を入力してください");
+                return;
+            }
+            if (displayMemory.slice(-1).match(/[+\-*×]/)) {
+                return; // 直前に演算子がある場合、処理を中止
+            }
+            clearErrorMessage();
             try {
-                memory = eval(memory).toString();
+                memory = eval(memory.replace(/×/g, '*')).toString(); // × を * に置き換え
                 displayMemory = memory;
                 updateDisplay();
             } catch {
@@ -146,14 +177,19 @@
             }
         }
 
-        // 税込みボタンと=ボタンのクリックイベントを無視する
-        document.querySelector('button[data-type="tax"]').addEventListener('click', function(event) {
-            if (displayMemory === "") event.preventDefault();
-        });
+        function validateForm() {
+            var display = document.getElementById('display').value;
+            var errorMessage = document.getElementById('error-message');
 
-        document.querySelector('button[data-type="equal"]').addEventListener('click', function(event) {
-            if (displayMemory === "") event.preventDefault();
-        });
+            if (display === "") {
+                errorMessage.innerText = "※値を入力してください";
+                return false; // フォームの送信を中止
+            } else if (display.match(/[+\-*×]$/)) {
+                errorMessage.innerText = "※計算が完了していません";
+                return false; // フォームの送信を中止
+            }
+            return true; // フォームの送信を許可
+        }
     </script>
 </body>
 

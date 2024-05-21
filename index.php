@@ -29,7 +29,6 @@
             padding: 10px; /* パディング */
             text-align: right; /* 右詰め */
         }
-
         .error-message {
             color: red;
             font-size: 12px; /* フォントサイズを14pxから12pxに変更 */

@@ -36,7 +36,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="bg-gray-200 flex justify-center items-center h-screen flex-col">
         <h1 class="text-3xl font-bold mb-6">YSEレジシステム</h1>

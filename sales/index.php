@@ -68,5 +68,4 @@ $total_sales = array_sum(array_column($sales, 'price'));
         </table>
     <?php endif ?>
 </body>
-
 </html>
